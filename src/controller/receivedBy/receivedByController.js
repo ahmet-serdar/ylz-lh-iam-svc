@@ -77,7 +77,7 @@ class ReceivedByController {
       lastName: res.data.profile.lastName,
       email: res.data.profile.email,
       status: res.data.status,
-      mobilePhone: res.profile.mobilePhone
+      mobilePhone: res.data.profile.mobilePhone
     }
     return new responses.CreatedResponse(user);
   }               
@@ -113,7 +113,7 @@ class ReceivedByController {
       lastName: res.data.profile.lastName,
       email: res.data.profile.email,
       status: res.data.status,
-      mobilePhone: res.profile.mobilePhone
+      mobilePhone: res.data.profile.mobilePhone
     }
 
     return new responses.OkResponse(user)
@@ -138,7 +138,7 @@ class ReceivedByController {
       lastName: res.data.profile.lastName,
       email: res.data.profile.email,
       status: res.data.status,
-      mobilePhone: res.profile.mobilePhone
+      mobilePhone: res.data.profile.mobilePhone
     }
 
     return new responses.OkResponse(user);
