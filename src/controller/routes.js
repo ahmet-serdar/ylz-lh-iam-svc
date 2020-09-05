@@ -98,7 +98,7 @@ router.get('/', auth, controllerAdapter(receivedByControllerInstance, 'list'))
              
  */
 //#endregion
-router.post("/", controllerAdapter(receivedByControllerInstance, 'create'))
+router.post("/", auth, controllerAdapter(receivedByControllerInstance, 'create'))
 
 //#region [swagger: /receivedBy/{id} - PATCH]
 /**
