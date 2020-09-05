@@ -99,6 +99,14 @@ class ReceivedByController {
       },
     });
 
+    const user = {
+      id: res.data.id,
+      firstName: res.data.profile.firstName,
+      lastName: res.data.profile.lastName,
+      email: res.data.profile.email,
+      status: res.data.status,
+    }
+
     return new responses.OkResponse(res.data)
   }
 
