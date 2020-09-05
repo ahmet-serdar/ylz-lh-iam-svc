@@ -71,7 +71,15 @@ class ReceivedByController {
         Authorization: 'SSWS' + token,
       },
     });
-    return new responses.CreatedResponse(res.data);
+    const user = {
+      id: res.data.id,
+      firstName: res.data.profile.firstName,
+      lastName: res.data.profile.lastName,
+      email: res.data.profile.email,
+      status: res.data.status,
+      mobilePhone: res.profile.mobilePhone
+    }
+    return new responses.CreatedResponse(user);
   }               
 
   async update({ query, params, body }) {
@@ -105,9 +113,10 @@ class ReceivedByController {
       lastName: res.data.profile.lastName,
       email: res.data.profile.email,
       status: res.data.status,
+      mobilePhone: res.profile.mobilePhone
     }
 
-    return new responses.OkResponse(res.data)
+    return new responses.OkResponse(user)
   }
 
   async delete({ params }) {
@@ -123,8 +132,16 @@ class ReceivedByController {
         Authorization: 'SSWS' + token,
       },
     });
+    const user = {
+      id: res.data.id,
+      firstName: res.data.profile.firstName,
+      lastName: res.data.profile.lastName,
+      email: res.data.profile.email,
+      status: res.data.status,
+      mobilePhone: res.profile.mobilePhone
+    }
 
-    return new responses.OkResponse(res.data);
+    return new responses.OkResponse(user);
 }
 }
 
