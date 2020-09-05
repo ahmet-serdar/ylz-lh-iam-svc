@@ -3,6 +3,7 @@ const axios = require('axios')
 
 const { debug } = require('@ylz/logger');
 const { responses } = require('@ylz/common');
+const User = require('../../repositories/users')
 
 class ReceivedByController {
   static getInstance() {
@@ -21,28 +22,102 @@ class ReceivedByController {
       const url = process.env.OKTA_API_URL ;
       const token = process.env.OKTA_API_TOKEN
       
-     const managers = await axios.get(url + process.env.OKTA_MANAGER_GROUP_ID + '/users', {
+     const users = await axios.get(url+ "groups/" + process.env.OKTA_MANAGER_GROUP_ID + '/users', {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: 'SSWS' + token,
         },
       });
-
-      console.log(managers.data,'managers')
       
-      managers.data.map(manager => {
-        const id = manager.id
-        const name = `${manager.profile.firstName} ${manager.profile.lastName}`
-        data = [...data, {id, name}]
+      users.data.map(manager => {
+        const user = {
+          id: manager.id,
+          firstName: manager.profile.firstName,
+          lastName: manager.profile.lastName,
+          email: manager.profile.email, 
+          mobilePhone: manager.profile.mobilePhone,
+          status: manager.status
+        }
+        data = [...data, user]
       })
     } catch (err) {
-      console.log(err)
       return new responses.NotFoundResponse(null, err);
     }
 
     return new responses.OkResponse(data);
   }
+
+  async create({ body }) {
+    debug('ReceivedByController - create:', JSON.stringify(body));
+    const managerGroupId = process.env.OKTA_MANAGER_GROUP_ID
+    const url = process.env.OKTA_API_URL ;
+    const token = process.env.OKTA_API_TOKEN
+
+    const userBody = {
+      profile: {
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+        login: body.email,
+        mobilePhone: body.mobilePhone
+      },
+      groupIds: [managerGroupId]
+    }
+    const res = await axios.post(url + 'users?activate=true', userBody, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'SSWS' + token,
+      },
+    });
+    return new responses.CreatedResponse(res.data);
+  }               
+
+  async update({ query, params, body }) {
+    debug('ReceivedByController - update:', JSON.stringify(query, params, body))
+    const _id = params.id
+    const url = process.env.OKTA_API_URL ;
+    const token = process.env.OKTA_API_TOKEN
+
+    const userBody = {
+      profile: {}
+    }
+    if(body.firstName) userBody.profile.firstName = body.firstName
+    if(body.lastName) userBody.profile.lastName = body.lastName
+    if(body.email) {
+      userBody.profile.email = body.email
+      userBody.profile.login = body.email    
+    }
+    if(body.mobilePhone) userBody.profile.mobilePhone = body.mobilePhone
+    // const user = new User(userBody)
+    const res = await axios.post(url + 'users/' + _id, userBody, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'SSWS' + token,
+      },
+    });
+
+    return new responses.OkResponse(res.data)
+  }
+
+  async delete({ params }) {
+    debug('ReceivedByController - delete:', JSON.stringify(params));
+    const _id = params.id
+    const url = process.env.OKTA_API_URL ;
+    const token = process.env.OKTA_API_TOKEN
+
+    const res = await axios.post(url + 'users/' + _id + "/lifecycle/deactivate", null, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'SSWS' + token,
+      },
+    });
+
+    return new responses.OkResponse(res.data);
+}
 }
 
 module.exports = ReceivedByController.getInstance();

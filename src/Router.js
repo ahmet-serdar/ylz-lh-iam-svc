@@ -116,7 +116,7 @@ class Router {
   }
   initControllerRoutes() {
     // mount routes
-    this.router.use("/", routes);
+    this.router.use("/receivedBy", routes);
   }
 }
 
