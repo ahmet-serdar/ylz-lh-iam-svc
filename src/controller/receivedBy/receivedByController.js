@@ -132,13 +132,21 @@ class ReceivedByController {
         Authorization: 'SSWS' + token,
       },
     });
+    const getUser = await axios.get(url + 'users/' + _id, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'SSWS' + token,
+      },
+    })
+    
     const user = {
-      id: res.data.id,
-      firstName: res.data.profile.firstName,
-      lastName: res.data.profile.lastName,
-      email: res.data.profile.email,
-      status: res.data.status,
-      mobilePhone: res.data.profile.mobilePhone
+      id: getUser.data.id,
+      firstName: getUser.data.profile.firstName,
+      lastName: getUser.data.profile.lastName,
+      email: getUser.data.profile.email,
+      status: getUser.data.status,
+      mobilePhone: getUser.data.profile.mobilePhone
     }
 
     return new responses.OkResponse(user);
