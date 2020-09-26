@@ -31,12 +31,14 @@ class ReceivedByController {
       });
       
       users.data.map(manager => {
+        console.log(manager, 'dddddddddddddddddddd')
         const user = {
           id: manager.id,
           firstName: manager.profile.firstName,
           lastName: manager.profile.lastName,
           email: manager.profile.email, 
           mobilePhone: manager.profile.mobilePhone,
+          branch: manager.profile.branch,
           status: manager.status
         }
         data = [...data, user]
@@ -60,7 +62,8 @@ class ReceivedByController {
         lastName: body.lastName,
         email: body.email,
         login: body.email,
-        mobilePhone: body.mobilePhone
+        mobilePhone: body.mobilePhone,
+        branch: body.branch
       },
       groupIds: [managerGroupId]
     }
@@ -77,7 +80,8 @@ class ReceivedByController {
       lastName: res.data.profile.lastName,
       email: res.data.profile.email,
       status: res.data.status,
-      mobilePhone: res.data.profile.mobilePhone
+      mobilePhone: res.data.profile.mobilePhone,
+      branch: res.data.profile.branch
     }
     return new responses.CreatedResponse(user);
   }               
@@ -98,6 +102,7 @@ class ReceivedByController {
       userBody.profile.login = body.email    
     }
     if(body.mobilePhone) userBody.profile.mobilePhone = body.mobilePhone
+    if(body.branch) userBody.profile.branch = body.branch
     // const user = new User(userBody)
     const res = await axios.post(url + 'users/' + _id, userBody, {
       headers: {
@@ -113,7 +118,8 @@ class ReceivedByController {
       lastName: res.data.profile.lastName,
       email: res.data.profile.email,
       status: res.data.status,
-      mobilePhone: res.data.profile.mobilePhone
+      mobilePhone: res.data.profile.mobilePhone,
+      branch: res.data.profile.branch
     }
 
     return new responses.OkResponse(user)
@@ -146,7 +152,8 @@ class ReceivedByController {
       lastName: getUser.data.profile.lastName,
       email: getUser.data.profile.email,
       status: getUser.data.status,
-      mobilePhone: getUser.data.profile.mobilePhone
+      mobilePhone: getUser.data.profile.mobilePhone,
+      branch: getUser.data.profile.branch
     }
 
     return new responses.OkResponse(user);
