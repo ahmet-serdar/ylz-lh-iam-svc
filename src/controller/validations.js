@@ -2,15 +2,69 @@
 
 const { constants } = require('@ylz/common')
 const { utilities } = require('@ylz/data-access')
-const { isBoolean } = require('@ylz/common/dist/src/libs/validations')
 
 const validations = Object.freeze({
   id: {
     custom: {
-      options: (id) => utilities.isValidObjectId(id),
+      options: (value) => {
+        if(value) {
+          return value.length >= 1}
+      },
       errorMessage: 'Wrong id format!',
     },
   },
+  firstName(locationType = constants.HttpRequestLocation.query, isRequired = true) {
+    return {
+      in: [locationType],
+      optional: !isRequired,
+      custom: {
+        options: (value) => {
+          if(value) {
+            return value.length >= 1}
+        },
+        errorMessage: `First name is required!`
+      }
+  }},
+  lastName(locationType = constants.HttpRequestLocation.query, isRequired = true) {
+    return {
+      in: [locationType],
+      optional: !isRequired,
+      custom: {
+        options: (value) => {
+          if(value) {
+            return value.length >= 1}
+        },
+        errorMessage: `Last name is required!`
+      }
+  }},
+  email(locationType = constants.HttpRequestLocation.query, isRequired = true) {
+    return {
+      in: [locationType],
+      optional: !isRequired,
+      custom: {
+        options: (value) => {
+          if(value !== null && value.length !== 0 ) {
+            return new RegExp("[a-zA-Z0-9_]+.[a-zA-Z0-9_]+@[a-zA-Z0-9]+.[a-z]{1,8}").test(value)
+        }
+        else {
+          return true
+        }
+      },
+        errorMessage: `Please check your email!`
+      }
+  }},
+  mobilePhone(locationType = constants.HttpRequestLocation.query, isRequired = true) {
+    return {
+      in: [locationType],
+      optional: !isRequired,
+      custom: {
+        options: (value) => {
+          if(value) {
+            return value.length >= 1}
+        },
+        errorMessage: `Please check your mobile number!`
+      }
+  }},
   branch(locationType = constants.HttpRequestLocation.query, isRequired = true) {
     return {
       in: [locationType],
@@ -22,48 +76,7 @@ const validations = Object.freeze({
         },
         errorMessage: `Branch is required!`
       }
-        
-      
   }},
-  paymentType(locationType = constants.HttpRequestLocation.query, isRequired = true) {
-    return {
-      in: [locationType],
-      optional: !isRequired,
-      custom: {
-        options: (value) => {
-          if(value) {
-            return value.length >= 1}
-        },
-        errorMessage: `Payment type is required!`
-      }
-      
-  }},
-  paymentReason(locationType = constants.HttpRequestLocation.query, isRequired = true) {
-    return {
-      in: [locationType],
-      optional: !isRequired,
-      custom: {
-        options: (value) => {
-          if(value) {
-            return value.length >= 1}
-        },
-        errorMessage: `Payment Reason is required!`
-      }
-      
-  }},
-  phoneType(locationType = constants.HttpRequestLocation.query, isRequired = true) {
-    return {
-      in: [locationType],
-      optional: !isRequired,
-      custom: {
-        options: (value) => {
-          if(value) {
-            return value.length >= 1}
-        },
-        errorMessage: `Phone Type  is required!`
-      }
-      
-  }}
 });
 
 /*
@@ -88,17 +101,22 @@ const validator = Object.freeze({
     },
   },
   create: {    
-    branch: validations.branch('body', false),
-    // paymentReason: validations.paymentReason('body', false),
-    // paymentType: validations.paymentType('body', false),
-    // phoneType: validations.phoneType('body', false)
+    firstName: validations.firstName('body', true),
+    lastName: validations.lastName('body', true),
+    email: validations.email('body', true),
+    mobilePhone: validations.mobilePhone('body', false),
+    branch: validations.branch('body', true)
   },
   update: {
-    // id: validations.id,
-    // branch: validations.branch('body', false),
-    // paymentReason: validations.paymentReason('body', false),
-    // paymentType: validations.paymentType('body', false),
-    // phoneType: validations.phoneType('body', false)
+    id: validations.id,
+    firstName: validations.firstName('body', false),
+    lastName: validations.lastName('body', false),
+    email: validations.email('body', false),
+    mobilePhone: validations.mobilePhone('body', false),
+    branch: validations.branch('body', false)
+  },
+  delete: {
+    id: validations.id
   }
 });
 

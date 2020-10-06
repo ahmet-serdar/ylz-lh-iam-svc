@@ -16,7 +16,6 @@ class ReceivedByController {
   async list({ query }) {
     debug('ReceivedByController - list:', JSON.stringify(query, null, 2));
 
-    const { limit, skip } = query;
     let data =[]
     try {
       const url = process.env.OKTA_API_URL ;
@@ -31,7 +30,6 @@ class ReceivedByController {
       });
       
       users.data.map(manager => {
-        console.log(manager, 'dddddddddddddddddddd')
         const user = {
           id: manager.id,
           firstName: manager.profile.firstName,
@@ -55,6 +53,19 @@ class ReceivedByController {
     const managerGroupId = process.env.OKTA_MANAGER_GROUP_ID
     const url = process.env.OKTA_API_URL ;
     const token = process.env.OKTA_API_TOKEN
+    const bodyKeys = Object.keys(body);
+    const allowedKeys = [
+      'firstName',
+      'lastName',
+      'mobilePhone',
+      'email',
+      'branch'
+    ];
+    const isValidOperation = bodyKeys.every((key) => allowedKeys.includes(key));
+
+    if (!isValidOperation) {
+      return new responses.BadRequestResponse(undefined, 'Invalid keys!.');
+    }
 
     const userBody = {
       profile: {

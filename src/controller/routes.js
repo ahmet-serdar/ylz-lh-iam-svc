@@ -4,7 +4,7 @@ const { checkSchema } = require("express-validator")
 const {
   receivedByControllerInstance
 } = require('./index')
-const { validations } = require("./validations")
+const validations = require("./validations")
 
 
 const router = new express.Router()
@@ -38,7 +38,7 @@ const router = new express.Router()
  *            
  */
 //#endregion
-router.get('/', auth, controllerAdapter(receivedByControllerInstance, 'list'))
+router.get('/', auth, checkSchema(validations.list), schemaErrorHandler(), controllerAdapter(receivedByControllerInstance, 'list'))
 
 
 //#region [swagger: /receivedBy - POST]
@@ -67,7 +67,8 @@ router.get('/', auth, controllerAdapter(receivedByControllerInstance, 'list'))
  *                  "firstName": "string",
  *                  "lastName": "string",
  *                  "email": "string",
- *                  "mobilePhone": "string"
+ *                  "mobilePhone": "string",
+ *                  "branch": "string"
  *                  }         
  *     responses:
  *       201:
@@ -98,7 +99,7 @@ router.get('/', auth, controllerAdapter(receivedByControllerInstance, 'list'))
              
  */
 //#endregion
-router.post("/", auth, controllerAdapter(receivedByControllerInstance, 'create'))
+router.post("/", auth, checkSchema(validations.create), schemaErrorHandler(), controllerAdapter(receivedByControllerInstance, 'create'))
 
 //#region [swagger: /receivedBy/{id} - PATCH]
 /**
@@ -133,7 +134,8 @@ router.post("/", auth, controllerAdapter(receivedByControllerInstance, 'create')
  *                	"firstName": "string",
  *                  "lastName": "string",
  *                  "email": "string@email.com",
- *                  "mobilePhone": "string"
+ *                  "mobilePhone": "string",
+ *                  "branch": "string"
  *                  }
  *     responses:
  *       200:
@@ -152,7 +154,7 @@ router.post("/", auth, controllerAdapter(receivedByControllerInstance, 'create')
  *         
  */
 //#endregion
-router.patch("/:id", auth, controllerAdapter(receivedByControllerInstance, 'update'))
+router.patch("/:id", auth, checkSchema(validations.update), schemaErrorHandler(), controllerAdapter(receivedByControllerInstance, 'update'))
 
 //#region [swagger: /receivedBy/{id} - DELETE]
 /**
@@ -194,6 +196,6 @@ router.patch("/:id", auth, controllerAdapter(receivedByControllerInstance, 'upda
  *
  */
 //#endregion
-router.delete("/:id", auth, controllerAdapter(receivedByControllerInstance, 'delete'))
+router.delete("/:id", auth, checkSchema(validations.delete), schemaErrorHandler(), controllerAdapter(receivedByControllerInstance, 'delete'))
 
 module.exports = router;
