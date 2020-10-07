@@ -13,21 +13,27 @@ class ReceivedByController {
 
     return ReceivedByController.instance;
   }
-  async list({ query }) {
-    debug('ReceivedByController - list:', JSON.stringify(query, null, 2));
+  async list({ query, locals }) {
+    debug('ReceivedByController - list:', JSON.stringify(query,locals));
 
+    const { curBranch } = locals
+    
     let data =[]
     try {
       const url = process.env.OKTA_API_URL ;
       const token = process.env.OKTA_API_TOKEN
-      
-     const users = await axios.get(url+ "groups/" + process.env.OKTA_MANAGER_GROUP_ID + '/users', {
+      let users
+      users = await axios.get(url+ "groups/" + process.env.OKTA_MANAGER_GROUP_ID + '/users', {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: 'SSWS' + token,
         },
       });
+      
+      if(curBranch) {
+        users.data = users.data.filter(manager => manager.profile.branch === curBranch)
+      }
       
       users.data.map(manager => {
         const user = {
