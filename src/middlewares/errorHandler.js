@@ -38,8 +38,11 @@ function errorHandler(nodeEnv) {
       default:
         if (err.name === "JwtParseError") {
           response = new responses.UnauthorizedResponse();
+        } else if(err.response.status === 400) {
+          response = new responses.BadRequestResponse();
         } else {
-          response = new responses.InternalServerErrorResponse({});
+          response = new responses.InternalServerError();
+
         }
         break;
     }
