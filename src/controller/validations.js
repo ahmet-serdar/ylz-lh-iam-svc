@@ -53,18 +53,6 @@ const validations = Object.freeze({
         errorMessage: `Please check your email!`
       }
   }},
-  mobilePhone(locationType = constants.HttpRequestLocation.query, isRequired = true) {
-    return {
-      in: [locationType],
-      optional: !isRequired,
-      custom: {
-        options: (value) => {
-          if(value) {
-            return value.length >= 1}
-        },
-        errorMessage: `Please check your mobile number!`
-      }
-  }},
   branch(locationType = constants.HttpRequestLocation.query, isRequired = true) {
     return {
       in: [locationType],
@@ -104,7 +92,6 @@ const validator = Object.freeze({
     firstName: validations.firstName('body', true),
     lastName: validations.lastName('body', true),
     email: validations.email('body', true),
-    mobilePhone: validations.mobilePhone('body', false),
     branch: validations.branch('body', true)
   },
   update: {
@@ -112,7 +99,6 @@ const validator = Object.freeze({
     firstName: validations.firstName('body', false),
     lastName: validations.lastName('body', false),
     email: validations.email('body', false),
-    mobilePhone: validations.mobilePhone('body', false),
     branch: validations.branch('body', false)
   },
   delete: {

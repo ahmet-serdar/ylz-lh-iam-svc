@@ -39,7 +39,7 @@ function errorHandler(nodeEnv) {
         if (err.name === "JwtParseError") {
           response = new responses.UnauthorizedResponse();
         } else if(err.response.status === 400) {
-          response = new responses.BadRequestResponse();
+          response = new responses.BadRequestResponse('Managers email must be unic!');
         } else {
           response = new responses.InternalServerError();
 
