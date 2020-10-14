@@ -18,6 +18,7 @@ const auth = async (req, res, next) => {
       const accessToken = req.headers.authorization.trim().split(' ')[1];  
       const ret = await verifier.verifyAccessToken(accessToken, oktaClientId);
       res.locals.curBranch = ret.claims.branch
+      res.locals.groups = ret.claims.groups
 
       next();
     } catch (error) {

@@ -16,7 +16,7 @@ class ReceivedByController {
   async list({ query, locals }) {
     debug('ReceivedByController - list:', JSON.stringify(query,locals));
 
-    const { curBranch } = locals
+    const { curBranch, groups } = locals
     
     let data =[]
     try {
@@ -31,7 +31,7 @@ class ReceivedByController {
         },
       });
       
-      if(curBranch) {
+      if(!groups.includes('Admin')) {
         users.data = users.data.filter(manager => manager.profile.branch === curBranch)
       }
       
